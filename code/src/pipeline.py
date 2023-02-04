@@ -1,5 +1,3 @@
-#TODO: change all prints to logger
-
 import os
 import sys
 import pickle
