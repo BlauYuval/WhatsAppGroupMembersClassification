@@ -7,6 +7,7 @@ WORKDIR /opt/code
 
 RUN apt-get update && \ 
 	apt-get install -y gcc g++ && \
+	apt-get install -y git && \
 	pip install --no-cache-dir jupyter && \
 	pip install transformers&& \
 	pip install transformers[torch]&&\
