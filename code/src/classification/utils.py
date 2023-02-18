@@ -35,3 +35,12 @@ def b_metrics(preds, labels):
     b_recall = tp / (tp + fn) if (tp + fn) > 0 else 'nan'
     b_specificity = tn / (tn + fp) if (tn + fp) > 0 else 'nan'
     return b_accuracy, b_precision, b_recall, b_specificity
+
+def get_predicted_name(row, names_mapping):
+    """Get the name of the person with the highest probability
+    Args:
+        row (pd.Series): row of the dataframe
+        names_mapping (dict): dictionary of the index to names
+    """
+    probs = row[[f"{name}_prob" for name in names_mapping.values()]]
+    return probs.astype(float).idxmax().split('_')[0]
