@@ -101,8 +101,10 @@ class Evaluator:
             names_mapping (dict): mapping between the names and the labels
         """
         predictions_with_data = pd.concat([dataset, predictions], axis=1)
+        predictions_with_data = predictions_with_data.rename(columns={'name': 'idx_name'})
+        predictions_with_data['name'] = predictions_with_data['idx_name'].apply(lambda x: names_mapping[x])
         predictions_with_data['preds'] = predictions_with_data.apply(lambda row: get_predicted_name(row, names_mapping), axis=1)
-        predictions_with_data['name'] = predictions_with_data['name'].apply(lambda x: names_mapping[x])
+        
         return predictions_with_data
     
     def save_dataframe(self, predictions_with_data):
