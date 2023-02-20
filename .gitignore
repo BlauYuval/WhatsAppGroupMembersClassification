@@ -34,6 +34,7 @@ data/
 
 # ignore the config file
 config.py
+code/src/visualization/mask_names.py
 
 # ignore the model output
 *.pt
