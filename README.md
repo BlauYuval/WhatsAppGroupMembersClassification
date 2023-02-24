@@ -93,13 +93,13 @@ To run this project after you have the WhatsApp data saved, you should run the `
 - Train the classification model.
 - Save the trained model and name mapping.
 - Then, for evaluation, you should run `evaluate.py` inside the `classification/` directory. 
-- Finally, to visualize, you should run `visualizer.py` inside the `visualization/` directory.
+- Finally, to visualize, you should run `visualizer.py` inside the `visualization/ directory.
 
 ## Model Results - Visualization
 
 The way I decided to visualize my results is by a big confusion matrix that includes examples of each combination of the classes. In that way, we can gain insight into the model's decisions. This is the visualization:
 
-![plot](/data/processed/model_inferecne/2023_02_04_01_31_25/confusion_matrix.png)
+![plot](/artifacts/confusion_matrix.png)
 
 
 Now we can look at the correctly classified examples (the (i,i) squares). By looking at those places, we can get a sense of what those examples have in common.
