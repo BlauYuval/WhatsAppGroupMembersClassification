@@ -1,10 +1,9 @@
-# TODO - add dodumentation
-
 import os
 import sys
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 from sklearn.metrics import confusion_matrix
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -86,7 +85,13 @@ class Visulaizer:
     
     def get_confusion_matrix(self, predictions:pd.DataFrame, names:np.array):
         """
-        
+        Create the confusion matrix of the predictions.     
+        assign the columns and index names to the confusion matrix.   
+        Args:
+            predictions: predictions dataframe
+            names: names of the predictions
+        Returns:
+            confusion_matrix_df: confusion matrix dataframe
         """
         confusion_matrix_df = pd.DataFrame(
             confusion_matrix(
@@ -100,7 +105,12 @@ class Visulaizer:
         
     def _get_index_to_names_dict(self, predictions:pd.DataFrame):
         """
-        
+        This function returns a dictionary of the index to the name.
+        This is used for the visualization indexing.
+        Args:
+            predictions: predictions dataframe
+        Returns:
+            index_to_names_dict: dictionary of the index to the name
         """
         index_to_names_dict = {i[0]: i[1] for i in predictions[['idx_name', 'name']].value_counts().index.tolist()}
         return index_to_names_dict
@@ -120,34 +130,39 @@ class Visulaizer:
             title: title of the plot
             cmap: color map
         """
-        plt.figure(figsize=(12,12))
-        plt.imshow(cm, interpolation='nearest', cmap=cmap)
-        plt.title(title)
-        plt.colorbar()
+        fig, ax = plt.subplots(figsize=(11,11))
+
+        ax.imshow(cm, interpolation='nearest', cmap=cmap)
+        ax.set_title(title)
         tick_marks = np.arange(len(classes))
-        plt.xticks(tick_marks, classes, rotation=45)
-        plt.yticks(tick_marks, classes)
+        ax.set_xticks(tick_marks, classes, rotation=45)
+        ax.set_yticks(tick_marks, classes)
         thresh = cm.max() / 1.5,
-        
+
         classes_length = len(classes)
         for i in range(classes_length):
             for j in range(classes_length):
-                true_name = index_to_names_dict[i]
-                pred_name = index_to_names_dict[j]
-                plt.text(i, j, f"Actual name is {true_name}\n Predicted Name is {pred_name}\n \n Text Examples:\n",
+                true_name = index_to_names_dict[j]
+                pred_name = index_to_names_dict[i]
+                ax.text(i, j, f"Actual name is {true_name}\n Predicted Name is {pred_name}\n \n Text Examples:\n",
                     verticalalignment="bottom",
                     horizontalalignment="center",
                     fontsize=10,
                     color="white" if cm[i,j] > thresh else "black")
-                plt.text(i, j, f"{texts_dict[true_name][pred_name]}",
+                ax.text(i, j, f"{texts_dict[true_name][pred_name]}",
                     horizontalalignment="center",
                     verticalalignment="top",
                     fontsize=8,
                     color="white" if cm[i,j] > thresh else "black")
 
         plt.tight_layout()
-        plt.ylabel('True label')
-        plt.xlabel('Predicted label')
+        ax.set_ylabel('True label')
+        ax.set_xlabel('Predicted label')
+        
+        circles = [mpatches.Rectangle((-0.5+i,-0.5+i), width=1,height=1, fill=False, color='black', linewidth=5) for i in range(len(classes))]
+        for circle in circles:
+            ax.add_patch(circle)
+
         plt.savefig(
             os.path.join(self.model_inference_path, 'confusion_matrix.png'), 
             dpi=300, bbox_inches='tight')
@@ -168,3 +183,9 @@ class Visulaizer:
             text_examples_for_each_class, 
             names,
             self._get_index_to_names_dict(predictions))
+        
+if __name__ == '__main__':
+    from config import config
+    path = os.path.join(config['model_inference_path'], config['model_path'].split('/')[-2])
+    vis = Visulaizer(path)
+    vis.run(is_mask_names=True)
