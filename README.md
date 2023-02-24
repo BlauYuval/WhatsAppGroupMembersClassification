@@ -67,6 +67,8 @@ config = {
     'prepared_for_machine_translation_path': f'{global_datapath}/processed/prepared_for_machine_translation',
     'prepared_for_classification_path': f'{global_datapath}/processed/prepared_for_classification',
     'classification_model_path': f'{global_datapath}/processed/classification_model',
+    'model_inference_path': f'{global_datapath}/processed/model_inferecne',
+    'model_path' : f'{global_datapath}/processed/classification_model/##model_date##/',
     'train_file_names': ['group1_data', 'group2_data'],
     'names_dictionary' : {
         'NaMe1': 'name1',
@@ -79,16 +81,47 @@ config = {
 
 ```
 
+## Run The Project
+
+To run this project after you have the WhatsApp data saved, you should run the `pipeline.py` script. It will do these steps:
+
+- Load data from the WhatsApp txt files, transform it to CSV files, and save it.
+- Preprocess data for machine translation and save it as CSV files.
+- Translate data with a machine translation model and save it as CSV files.
+- Preprocess data for classification.
+- Preprocess classification data for the model and split it into train and validation sets.
+- Train the classification model.
+- Save the trained model and name mapping.
+- Then, for evaluation, you should run `evaluate.py` inside the `classification/` directory. 
+- Finally, to visualize, you should run `visualizer.py` inside the `visualization/` directory.
+
+## Model Results - Visualization
+
+The way I decided to visualize my results is by a big confusion matrix that includes examples of each combination of the classes. In that way, we can gain insight into the model's decisions. This is the visualization:
+
+![plot](/data/processed/model_inferecne/2023_02_04_01_31_25/confusion_matrix.png)
+
+
+Now we can look at the correctly classified examples (the (i,i) squares). By looking at those places, we can get a sense of what those examples have in common.
+
+ For Zvi, we can see that he likes to ask questions. 
+ 
+ For Shuki, we see that he likes to call Eli (who is also in this group). 
+ 
+ And for Arie, we see that he likes to talk in short sentences.
+
+Interesting!
+
+With this confusion matrix, we can also perform error analysis by looking at the misclassified examples.
 
 
 ## Milestones
 
-### Achieved
 - Date: 2023-02-04
   - Initial release of the project
   - Training model code
 
-### Future plans
-- Use the model to predict on test data
-- Evaluate the performance
-- Perform text visualization of easy and hard examples
+- Date: 2023-02-23
+  - Evaluate model performance
+  - Visualize the model results with concrete examples
+
